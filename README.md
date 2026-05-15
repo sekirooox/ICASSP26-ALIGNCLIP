@@ -96,4 +96,4 @@ Our work is inspired by these assets. Please consider to cite them as well in yo
 ```
 ## Notice
 + This github repository will be permanently discontinued from any further updates as a historical heritage. 
-+ If you wish to obtain our pre-trained weights, you can contact us via the email: ml1353578@stu2023.jnu.edu.cn.
+
