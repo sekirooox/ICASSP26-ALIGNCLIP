@@ -149,7 +149,10 @@ def main():
             0.5, 0.75, 1.0, 1.25, 1.5, 1.75
         ]
         cfg.data.test.pipeline[1].flip = True
+    backbone_pretrained = cfg.model.get('pretrained', None)
     cfg.model.pretrained = None
+    if backbone_pretrained is not None and cfg.model.get('backbone', None) is not None:
+        cfg.model.backbone.pretrained = backbone_pretrained
     cfg.data.test.test_mode = True
 
     if args.gpu_id is not None:
@@ -208,8 +211,11 @@ def main():
         cfg.model.class_names = list(dataset.CLASSES)
 
     model = build_segmentor(cfg.model, test_cfg=cfg.get('test_cfg'))
+    model.backbone.init_weights()
+    if hasattr(model, 'text_encoder'):
+        model.text_encoder.init_weights()
     if hasattr(model, 'presegmentor'):
-        model.presegmentor.init_weights() # to initial conv1/2 to get pseudo mask
+        model.presegmentor.init_weights()  # initialize pseudo-mask branches before loading checkpoint
     fp16_cfg = cfg.get('fp16', None)
     if fp16_cfg is not None:
         wrap_fp16_model(model)
